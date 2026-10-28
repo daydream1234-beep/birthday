@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2a0b22">
+<title>有个惊喜给你 ✨</title>
+<meta name="description" content="点开看看～">
+<meta property="og:title" content="有个惊喜给你 ✨">
+<meta property="og:description" content="点开看看～">
+<meta property="og:type" content="website">
+<meta property="og:image" content="cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="cover.png">
+<style>
+  :root{
+    --pink:#ff8fb8; --pink-light:#ffd6ea; --pink-deep:#ff6ba0;
+    --purple:#b06bff; --white:#fff7fb; --gold:#ffd9a0;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; }
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    overflow:hidden; position:fixed; inset:0; width:100%;
+    background:#1c0716; color:var(--white);
+    user-select:none; -webkit-user-select:none; touch-action:manipulation;
+  }
+  #stage{ position:fixed; inset:0; overflow:hidden; }
+
+  /* 梦幻渐变背景 */
+  #bg{
+    position:absolute; inset:-20%; z-index:0;
+    background:
+      radial-gradient(60% 55% at 20% 18%, rgba(255,143,184,.55), transparent 60%),
+      radial-gradient(55% 50% at 82% 25%, rgba(176,107,255,.45), transparent 60%),
+      radial-gradient(70% 60% at 50% 90%, rgba(255,107,160,.40), transparent 65%),
+      linear-gradient(160deg,#3b1030 0%, #2a0b22 45%, #1c0716 100%);
+    background-size:200% 200%;
+    animation:bgShift 16s ease-in-out infinite;
+  }
+  @keyframes bgShift{
+    0%,100%{ background-position:0% 0%; }
+    50%{ background-position:100% 100%; }
+  }
+
+  #fx{ position:absolute; inset:0; z-index:1; display:block; }
+
+  /* 中心大标题（高潮） */
+  #centerText{
+    position:absolute; inset:0; z-index:2; display:flex;
+    flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:0 24px; pointer-events:none;
+    opacity:0; transform:scale(.85);
+    transition:opacity 1.2s ease, transform 1.2s cubic-bezier(.2,.8,.2,1);
+  }
+  #centerText.show{ opacity:1; transform:scale(1); }
+  #centerText .big{
+    font-size:clamp(40px,9vw,84px); font-weight:800; letter-spacing:2px;
+    background:linear-gradient(180deg,#fff,#ffd6ea 60%,#ff8fb8);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 18px rgba(255,143,184,.85));
+    animation:breathe 2.6s ease-in-out infinite;
+  }
+  #centerText .sub{
+    margin-top:18px; font-size:clamp(17px,4.5vw,26px); font-weight:600;
+    color:#ffe3f0; text-shadow:0 0 14px rgba(255,143,184,.8);
+    letter-spacing:3px;
+  }
+  @keyframes breathe{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.05);} }
+
+  /* 礼物盒 */
+  #gift{
+    position:absolute; inset:0; z-index:3; display:flex;
+    flex-direction:column; align-items:center; justify-content:center;
+    gap:26px; padding:24px; text-align:center;
+    opacity:0; pointer-events:none; transform:scale(.9);
+    transition:opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
+  }
+  #gift.show{ opacity:1; pointer-events:auto; transform:scale(1); }
+
+  .gift-box{ position:relative; width:150px; height:150px; cursor:pointer; animation:giftFloat 3s ease-in-out infinite; }
+  .gift-box .glow{
+    position:absolute; inset:-22px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,143,184,.55), transparent 65%);
+    filter:blur(6px); animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); opacity:.7;} 50%{ transform:scale(1.15); opacity:1;} }
+  @keyframes giftFloat{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-12px);} }
+
+  .gift-lid, .gift-body{ position:absolute; left:50%; transform:translateX(-50%); border-radius:8px; }
+  .gift-lid{
+    top:30px; width:130px; height:34px; z-index:3;
+    background:linear-gradient(180deg,#ffa8cb,#ff6ba0);
+    box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.4);
+  }
+  .gift-body{
+    top:64px; width:112px; height:76px; z-index:2;
+    background:linear-gradient(180deg,#ff7bb0,#e64a8f);
+    box-shadow:0 10px 26px rgba(0,0,0,.4), inset 0 2px 0 rgba(255,255,255,.3);
+  }
+  .gift-ribbon-v{
+    position:absolute; left:50%; top:30px; transform:translateX(-50%);
+    width:24px; height:110px; z-index:4;
+    background:linear-gradient(180deg,#fff,#ffd6ea); border-radius:4px;
+  }
+  .gift-ribbon-h{
+    position:absolute; top:64px; left:50%; transform:translateX(-50%);
+    width:130px; height:24px; z-index:4;
+    background:linear-gradient(90deg,#fff,#ffd6ea); border-radius:4px;
+  }
+  .gift-bow{
+    position:absolute; top:8px; left:50%; transform:translateX(-50%); z-index:5;
+    width:0; height:0;
+  }
+  .gift-bow::before,.gift-bow::after{
+    content:""; position:absolute; top:0; width:34px; height:22px;
+    background:#ff6ba0; border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+    box-shadow:inset 0 -4px 6px rgba(0,0,0,.12);
+  }
+  .gift-bow::before{ left:-36px; transform:rotate(-28deg); }
+  .gift-bow::after{ right:-36px; transform:rotate(28deg); }
+
+  /* 开盒动画 */
+  .gift-box.opening{ animation:none; }
+  .gift-box.opening .gift-lid{ animation:lidUp .7s ease forwards; }
+  @keyframes lidUp{ to{ transform:translate(-50%,-58px) rotate(-14deg); opacity:.35; } }
+  .gift-box.opening .gift-body{ animation:bodyPop .7s ease forwards; }
+  @keyframes bodyPop{ 0%{transform:translateX(-50%) scale(1);} 50%{transform:translateX(-50%) scale(1.18);} 100%{transform:translateX(-50%) scale(1.05); opacity:0;} }
+  .gift-box.opening .gift-ribbon-v,.gift-box.opening .gift-ribbon-h,.gift-box.opening .gift-bow{ animation:fadeOut .6s ease forwards; }
+  @keyframes fadeOut{ to{ opacity:0; } }
+
+  #giftHint{ font-size:17px; color:#ffe3f0; letter-spacing:2px; text-shadow:0 0 12px rgba(255,143,184,.7); }
+  #giftHint.hidden{ display:none; }
+
+  /* 拆开后的贺卡 */
+  #giftCard{
+    max-width:340px; width:100%;
+    max-height:74vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    background:linear-gradient(160deg,#fff7fb,#ffe9f3);
+    color:#7a2a55; border-radius:20px; padding:30px 26px;
+    box-shadow:0 20px 50px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.4) inset;
+    transform:translateY(26px) scale(.92); opacity:0;
+    transition:transform .7s cubic-bezier(.2,.8,.2,1), opacity .7s ease;
+    pointer-events:none;
+  }
+  #giftCard.show{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
+  #giftCard h2{ font-size:24px; font-weight:800; margin-bottom:14px; color:#e0498c; }
+  #giftCard p{ font-size:15px; line-height:1.9; text-align:left; margin:0 0 10px; }
+  #giftCard p.sign{ text-align:right; color:#b8487f; font-weight:700; margin-top:14px; }
+
+  /* 语音条 */
+  #voiceWrap{
+    margin:18px 0 4px; padding:12px 14px; border-radius:14px;
+    background:linear-gradient(135deg,#ffe0ee,#ffd1e4);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);
+    display:none;
+  }
+  #voiceWrap.show{ display:block; }
+  #voiceHint{ font-size:13px; color:#b8487f; font-weight:700; margin-bottom:10px; letter-spacing:.5px; }
+  #voiceBar{ display:flex; align-items:center; gap:12px; }
+  #voiceBtn{
+    flex:0 0 auto; width:46px; height:46px; border-radius:50%; border:none; cursor:pointer;
+    background:linear-gradient(135deg,#ff8fb8,#ff6ba0); color:#fff; font-size:18px;
+    box-shadow:0 6px 16px rgba(255,107,160,.5);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .15s ease;
+  }
+  #voiceBtn:active{ transform:scale(.93); }
+  #voiceBtn.playing{ animation:voicePulse 1.4s ease-in-out infinite; }
+  @keyframes voicePulse{ 0%,100%{ box-shadow:0 6px 16px rgba(255,107,160,.5);} 50%{ box-shadow:0 6px 26px rgba(255,107,160,.95);} }
+  #voiceMeta{ flex:1 1 auto; min-width:0; }
+  #voiceWave{ display:flex; align-items:flex-end; gap:2px; height:22px; }
+  #voiceWave i{
+    display:block; width:3px; border-radius:2px; background:#ff9ecb;
+    height:6px; transition:height .12s linear;
+  }
+  #voiceWave.on i{ background:#ff6ba0; }
+  #voiceTime{ font-size:12px; color:#b8487f; margin-top:5px; letter-spacing:.5px; }
+  #voiceErr{ font-size:13px; color:#b8487f; line-height:1.7; display:none; }
+  #voiceErr.show{ display:block; }
+  #giftCard .real-gift{
+    margin-top:18px; padding:12px 14px; border-radius:12px; font-weight:700; font-size:15px;
+    background:linear-gradient(135deg,#ff8fb8,#ff6ba0); color:#fff;
+    box-shadow:0 8px 20px rgba(255,107,160,.45);
+  }
+  #replay{
+    margin-top:16px; border:none; cursor:pointer;
+    padding:11px 26px; border-radius:999px; font-size:15px; font-weight:700; letter-spacing:1px;
+    background:#fff; color:#e0498c; box-shadow:0 6px 16px rgba(0,0,0,.15);
+  }
+  #replay:active{ transform:scale(.96); }
+
+  /* 开屏封面 */
+  #cover{
+    position:absolute; inset:0; z-index:4; display:flex;
+    flex-direction:column; align-items:center; justify-content:center;
+    gap:20px; text-align:center; padding:0 30px;
+    background:radial-gradient(60% 50% at 50% 40%, rgba(255,143,184,.25), transparent 70%);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  #cover.hide{ opacity:0; pointer-events:none; transform:scale(1.04); }
+  #cover .cake{ font-size:clamp(64px,18vw,120px); filter:drop-shadow(0 0 24px rgba(255,143,184,.7)); animation:breathe 2.8s ease-in-out infinite; }
+  #cover h1{ font-size:clamp(30px,8vw,56px); font-weight:800; letter-spacing:3px;
+    background:linear-gradient(180deg,#fff,#ffd6ea 55%,#ff8fb8);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 16px rgba(255,143,184,.8)); }
+  #cover p{ font-size:15px; color:#ffd6ea; letter-spacing:2px; }
+  #startBtn{
+    border:none; cursor:pointer; padding:16px 46px; border-radius:999px;
+    font-size:18px; font-weight:800; letter-spacing:3px; color:#fff;
+    background:linear-gradient(135deg,#ff8fb8,#ff6ba0);
+    box-shadow:0 10px 30px rgba(255,107,160,.55), 0 0 0 1px rgba(255,255,255,.35) inset;
+    animation:startPulse 2s ease-in-out infinite;
+  }
+  #startBtn:active{ transform:scale(.96); }
+  @keyframes startPulse{ 0%,100%{ box-shadow:0 10px 30px rgba(255,107,160,.55);} 50%{ box-shadow:0 14px 42px rgba(255,107,160,.85);} }
+
+  /* 跳过按钮 */
+  #skip{
+    position:absolute; top:calc(14px + env(safe-area-inset-top)); right:16px; z-index:5;
+    border:none; background:rgba(255,255,255,.12); color:#ffd6ea;
+    padding:8px 16px; border-radius:999px; font-size:13px; cursor:pointer; letter-spacing:1px;
+    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    opacity:0; pointer-events:none; transition:opacity .5s ease;
+  }
+  #skip.show{ opacity:1; pointer-events:auto; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <canvas id="fx"></canvas>
+
+  <div id="centerText">
+    <div class="big">小四<br>生日快乐 🎂</div>
+    <div class="sub">考研上岸 · 岁岁平安 · 天天开心</div>
+  </div>
+
+  <div id="gift">
+    <div class="gift-box" id="giftBox">
+      <div class="glow"></div>
+      <div class="gift-bow"></div>
+      <div class="gift-lid"></div>
+      <div class="gift-ribbon-v"></div>
+      <div class="gift-ribbon-h"></div>
+      <div class="gift-body"></div>
+    </div>
+    <div id="giftHint">点一下拆开礼物 🎀</div>
+    <div id="giftCard">
+      <h2>小四，生日快乐 🎂</h2>
+      <p>其实想说这句话很久了——这一年的你，真的很了不起。</p>
+      <p>我知道你有多少个早上是靠闹钟和意志力硬撑起来的，知道你嘴上说着“还行吧”其实心里也在打鼓，也知道你有过想把书合上再也不翻的瞬间。可你还是一天一天地坐到了现在。</p>
+      <p>所以我从来不担心结果。你这样的人，走到哪儿都不会差。我只希望你进考场的时候别慌，会的都写对，不会的也能蒙对；出考场的时候能长长舒一口气，说一句“我尽力了”。</p>
+      <p>上岸当然要上岸，但比上岸更重要的是——你要好好的。好好吃饭，好好睡觉，别把自己绷得太紧。</p>
+      <p>生日快乐，小四。愿你从此以后的路，都顺得让你自己都有点意外。</p>
+      <p class="sign">—— 一直在你这边的人</p>
+      <div id="voiceWrap">
+        <div id="voiceHint">🎧 录了一段话给你，点开听</div>
+        <div id="voiceBar">
+          <button id="voiceBtn" aria-label="播放语音">▶</button>
+          <div id="voiceMeta">
+            <div id="voiceWave"></div>
+            <div id="voiceTime">00:00</div>
+          </div>
+        </div>
+        <div id="voiceErr">语音需要在页面上单独上传后才能播放。<br>（把 voice.mp3 和 index.html 一起传到 GitHub 就行）</div>
+      </div>
+      <div class="real-gift">🎁 礼物是实物的，微信找我，我寄给你 / 约时间当面给你</div>
+      <button id="replay">再看一遍 ✨</button>
+    </div>
+  </div>
+
+  <div id="cover">
+    <div class="cake">🎂</div>
+    <h1>小四，生日快乐</h1>
+    <p>戴上耳机 · 点下面的按钮开始 ✨</p>
+    <button id="startBtn">开启惊喜</button>
+  </div>
+
+  <button id="skip">跳过动画 ⏭</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const NAME = "小四";
+  const WISHES = [
+    "小四 生日快乐 🎂","小四 考研上岸 📚","小四 一研为定 ✨",
+    "小四 一定上岸 🏆","小四 金榜题名 🎊","小四 逢考必过 📝",
+    "小四 前程似锦 🌟","小四 岁岁平安 🕯️","小四 万事胜意 🍀",
+    "小四 天天开心 🌸","小四 平安喜乐 🎐","小四 未来可期 🌈",
+    "小四 生日快乐呀 🎉","小四 生日快乐 💗","小四 加油 ✊",
+    "小四 早点休息 🌙","小四 照顾好自己 ☕","小四 辛苦了 🧣",
+    "小四 上岸上岸 ⛰️","小四 生日快乐 💖"
+  ];
+  const TEXT_COLORS = ["#ff9ecb","#ffd1e8","#ffc0e0","#ffffff","#ffb3d9","#ffe3f0","#ff8fb8","#ffd9a0"];
+  const SPARKLES = ["✨","💖","🌸","🎀","⭐","🩷"];
+
+  const canvas = document.getElementById("fx");
+  const ctx = canvas.getContext("2d");
+  let W=0, H=0, DPR=1;
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.floor(W*DPR); canvas.height = Math.floor(H*DPR);
+    canvas.style.width = W+"px"; canvas.style.height = H+"px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener("resize", resize); resize();
+
+  const rand = (a,b)=> a + Math.random()*(b-a);
+  const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+  let particles = [];   // 满屏飘字
+  let sparkles = [];    // 环境小光点
+  let confetti = [];    // 高潮心形雨
+  let phase = "cover";
+  let startTime = 0;
+  let lastSpawn = 0;
+  let giftShown = false;
+
+  // ---- 环境光点 ----
+  function initSparkles(){
+    sparkles = [];
+    const n = Math.round(W*H/26000);
+    for(let i=0;i<Math.max(24,n);i++){
+      sparkles.push({
+        x:rand(0,W), y:rand(0,H), vx:rand(-.2,.2), vy:rand(-.35,-.08),
+        size:rand(10,22), char:pick(SPARKLES), tw:rand(0,Math.PI*2), ts:rand(.01,.04)
+      });
+    }
+  }
+  initSparkles();
+
+  function spawnText(){
+    const size = rand(17, 44);
+    const fromBottom = Math.random() < .8;
+    const x = fromBottom ? rand(0, W) : (Math.random()<.5 ? -60 : W+60);
+    const y = fromBottom ? H + size : rand(H*.2, H*.9);
+    particles.push({
+      text:pick(WISHES), x, y,
+      vx: rand(-.3,.3) + (fromBottom?0:(x<0?.6:-.6)),
+      vy: rand(-.85,-.3),
+      size, alpha:0, life:0,
+      maxLife: rand(9,15),
+      color:pick(TEXT_COLORS),
+      swayAmp:rand(8,26), swaySpeed:rand(.3,.7), sway:rand(0,Math.PI*2)
+    });
+  }
+
+  function spawnConfetti(){
+    const n = 12;
+    for(let i=0;i<n;i++){
+      confetti.push({
+        x:rand(0,W), y:-40,
+        vx:rand(-.6,.6), vy:rand(1.4,3.2),
+        size:rand(16,34), char:pick(["💗","💖","✨","🎉","🎂","🌸","💕","🎊"]),
+        rot:rand(0,Math.PI*2), vr:rand(-.12,.12), sway:rand(0,Math.PI*2), sws:rand(.02,.06)
+      });
+    }
+  }
+
+  function drawHeart(ctx,x,y,s,color){
+    ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+    ctx.beginPath();
+    ctx.moveTo(0,.3);
+    ctx.bezierCurveTo(.5,-.15,1.1,-.15,1.1,.15);
+    ctx.bezierCurveTo(1.1,.45,.55,.75,0,1.05);
+    ctx.bezierCurveTo(-.55,.75,-1.1,.45,-1.1,.15);
+    ctx.bezierCurveTo(-1.1,-.15,-.5,-.15,0,.3);
+    ctx.fillStyle=color; ctx.fill();
+    ctx.restore();
+  }
+
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.min((now-last)/1000, .05); last = now;
+    ctx.clearRect(0,0,W,H);
+
+    // 环境光点
+    for(const s of sparkles){
+      s.tw += s.ts; s.x += s.vx; s.y += s.vy;
+      if(s.y < -30){ s.y = H+30; s.x = rand(0,W); }
+      if(s.x < -30) s.x = W+30; if(s.x > W+30) s.x = -30;
+      const a = .35 + .45*Math.abs(Math.sin(s.tw));
+      ctx.globalAlpha = a;
+      ctx.font = s.size+"px sans-serif";
+      ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.fillText(s.char, s.x, s.y);
+    }
+    ctx.globalAlpha = 1;
+
+    // 满屏飘字
+    if(phase==="float"){
+      if(now - lastSpawn > 210){ spawnText(); lastSpawn = now; }
+      const elapsed = (now-startTime)/1000;
+      if(elapsed > 10 && !giftShown){ showGift(); }
+    }
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.life += dt;
+      p.sway += p.swaySpeed*dt;
+      p.x += p.vx + Math.sin(p.sway)*p.swayAmp*dt*4;
+      p.y += p.vy* (p.life<.8 ? 1.4 : 1);
+      if(p.life < 1) p.alpha = Math.min(1, p.life);
+      else if(p.life > p.maxLife-1.2) p.alpha = Math.max(0, (p.maxLife-p.life)/1.2);
+      else p.alpha = 1;
+      if(p.y < -p.size*2 || p.life > p.maxLife){ particles.splice(i,1); continue; }
+      ctx.globalAlpha = p.alpha;
+      ctx.font = "600 "+p.size+"px 'PingFang SC','Microsoft YaHei',sans-serif";
+      ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.shadowColor = p.color; ctx.shadowBlur = p.size*.8;
+      ctx.fillStyle = p.color;
+      ctx.fillText(p.text, p.x, p.y);
+      ctx.shadowBlur = 0;
+    }
+    ctx.globalAlpha = 1;
+
+    // 高潮心形雨
+    for(let i=confetti.length-1;i>=0;i--){
+      const c = confetti[i];
+      c.sway += c.sws; c.rot += c.vr;
+      c.x += c.vx + Math.sin(c.sway)*1.2;
+      c.y += c.vy;
+      if(c.y > H+50){ confetti.splice(i,1); continue; }
+      ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.rot);
+      ctx.font = c.size+"px sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.fillText(c.char,0,0); ctx.restore();
+    }
+
+    if(phase==="climax" && Math.random()<.25){ spawnConfetti(); }
+    if(phase==="gift" && Math.random()<.06){ spawnConfetti(); }
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // ---- 音频：八音盒版《生日快乐》 ----
+  let audioCtx=null, musicTimer=null;
+  const NOTE_F = {C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392.00,A4:440.00,B4:493.88,
+                  C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880.00};
+  const MELODY = [
+    ["G4",.75],["G4",.25],["A4",1],["G4",1],["C5",1],["B4",2],
+    ["G4",.75],["G4",.25],["A4",1],["G4",1],["D5",1],["C5",2],
+    ["G4",.75],["G4",.25],["G5",1],["E5",1],["C5",1],["B4",1],["A4",2],
+    ["F5",.75],["F5",.25],["E5",1],["C5",1],["D5",1],["C5",2]
+  ];
+  const BEAT = 0.42;
+  const MELODY_TOTAL = MELODY.reduce((s,[,b])=>s+b*BEAT,0);
+
+  function playTone(freq, offset, dur, gain){
+    const t0 = audioCtx.currentTime + offset;
+    const g = audioCtx.createGain();
+    g.connect(audioCtx.destination);
+    const o1 = audioCtx.createOscillator(); o1.type="sine"; o1.frequency.value=freq;
+    const o2 = audioCtx.createOscillator(); o2.type="triangle"; o2.frequency.value=freq*2;
+    const g2 = audioCtx.createGain(); g2.gain.value=.18;
+    o2.connect(g2); g2.connect(g); o1.connect(g);
+    g.gain.setValueAtTime(0,t0);
+    g.gain.linearRampToValueAtTime(gain, t0+.012);
+    g.gain.exponentialRampToValueAtTime(.0001, t0+dur);
+    o1.start(t0); o1.stop(t0+dur+.05); o2.start(t0); o2.stop(t0+dur+.05);
+  }
+  function scheduleMelody(){
+    let t=0;
+    for(const [n,b] of MELODY){ playTone(NOTE_F[n], t, b*BEAT*.96, .5); t += b*BEAT; }
+  }
+  function loopMusic(){
+    scheduleMelody();
+    musicTimer = setTimeout(loopMusic, (MELODY_TOTAL+2.2)*1000);
+  }
+  function startMusic(){
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      audioCtx = new AC();
+    }
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    scheduleMelody();
+    musicTimer = setTimeout(loopMusic, (MELODY_TOTAL+2.2)*1000);
+  }
+
+  // ---- 流程控制 ----
+  const cover = document.getElementById("cover");
+  const startBtn = document.getElementById("startBtn");
+  const centerText = document.getElementById("centerText");
+  const gift = document.getElementById("gift");
+  const giftBox = document.getElementById("giftBox");
+  const giftHint = document.getElementById("giftHint");
+  const giftCard = document.getElementById("giftCard");
+  const skip = document.getElementById("skip");
+  const replay = document.getElementById("replay");
+
+  function begin(){
+    phase = "float"; startTime = performance.now(); lastSpawn = startTime;
+    cover.classList.add("hide");
+    skip.classList.add("show");
+    startMusic();
+    setTimeout(()=>{
+      if(phase!=="gift"){ phase="climax"; centerText.classList.add("show"); }
+      setTimeout(()=>{ if(phase==="climax") showGift(); }, 3200);
+    }, 9000);
+  }
+  function showGift(){
+    if(giftShown) return; giftShown = true;
+    phase = "gift";
+    centerText.classList.remove("show");
+    gift.classList.add("show");
+    skip.classList.remove("show");
+  }
+  function openGift(){
+    if(giftBox.classList.contains("opening")) return;
+    giftBox.classList.add("opening");
+    giftHint.classList.add("hidden");
+    // 拆开瞬间来一波心形雨
+    for(let i=0;i<5;i++) setTimeout(spawnConfetti, i*120);
+    setTimeout(()=>{
+      giftBox.style.display="none";
+      giftCard.classList.add("show");
+      // 贺卡出现后展开语音条
+      setTimeout(()=>{ voiceWrap.classList.add("show"); }, 600);
+    }, 750);
+  }
+
+  startBtn.addEventListener("click", begin);
+  giftBox.addEventListener("click", openGift);
+  skip.addEventListener("click", ()=>{ phase="gift"; showGift(); });
+  replay.addEventListener("click", ()=> location.reload());
+
+  // ---- 语音条 ----
+  const VOICE_SRC = "voice.mp3";   // 把你的录音命名成 voice.mp3 放在同一文件夹
+  const voiceWrap = document.getElementById("voiceWrap");
+  const voiceBtn  = document.getElementById("voiceBtn");
+  const voiceWave = document.getElementById("voiceWave");
+  const voiceTime = document.getElementById("voiceTime");
+  const voiceErr  = document.getElementById("voiceErr");
+
+  // 波形条
+  const BARS = 26;
+  for(let i=0;i<BARS;i++){
+    const b = document.createElement("i");
+    b.style.height = (6 + Math.random()*6) + "px";
+    voiceWave.appendChild(b);
+  }
+  const bars = Array.from(voiceWave.children);
+
+  const voice = new Audio();
+  voice.preload = "auto";
+  voice.src = VOICE_SRC;
+  let voiceReady = false, voiceFailed = false, waveRAF = 0;
+
+  const fmt = s => {
+    if(!isFinite(s) || s < 0) s = 0;
+    const m = Math.floor(s/60), ss = Math.floor(s%60);
+    return String(m).padStart(2,"0") + ":" + String(ss).padStart(2,"0");
+  };
+
+  voice.addEventListener("loadedmetadata", ()=>{ voiceReady = true; voiceTime.textContent = "00:00 / " + fmt(voice.duration); });
+  voice.addEventListener("canplay", ()=>{ voiceReady = true; });
+  voice.addEventListener("error", ()=>{
+    if(!voiceReady){ voiceFailed = true; voiceErr.classList.add("show"); voiceBtn.disabled = true; }
+  });
+  voice.addEventListener("play", ()=>{
+    voiceBtn.textContent = "❚❚"; voiceBtn.classList.add("playing"); voiceWave.classList.add("on");
+    animateWave();
+  });
+  voice.addEventListener("pause", ()=>{
+    voiceBtn.textContent = "▶"; voiceBtn.classList.remove("playing"); voiceWave.classList.remove("on");
+    cancelAnimationFrame(waveRAF); bars.forEach(b=> b.style.height = (6+Math.random()*6)+"px");
+  });
+  voice.addEventListener("ended", ()=>{
+    voiceBtn.textContent = "▶"; voiceBtn.classList.remove("playing"); voiceWave.classList.remove("on");
+    cancelAnimationFrame(waveRAF); bars.forEach(b=> b.style.height = (6+Math.random()*6)+"px");
+    voiceTime.textContent = "00:00 / " + fmt(voice.duration);
+  });
+  voice.addEventListener("timeupdate", ()=>{
+    voiceTime.textContent = fmt(voice.currentTime) + " / " + fmt(voice.duration || 0);
+  });
+
+  function animateWave(){
+    const t = performance.now() / 180;
+    bars.forEach((b,i)=>{
+      const h = 6 + Math.abs(Math.sin(t + i*0.7)) * 15;
+      b.style.height = h.toFixed(1) + "px";
+    });
+    waveRAF = requestAnimationFrame(animateWave);
+  }
+
+  voiceBtn.addEventListener("click", ()=>{
+    if(voiceFailed) return;
+    // 播放语音时压低背景音乐，结束后恢复
+    if(voice.paused){
+      if(audioCtx && musicTimer){ try{ audioCtx.suspend(); }catch(e){} }
+      const p = voice.play();
+      if(p && p.catch) p.catch(()=>{ voiceErr.classList.add("show"); });
+    } else {
+      voice.pause();
+      if(audioCtx && musicTimer){ try{ audioCtx.resume(); }catch(e){} }
+    }
+  });
+
+  // 防止微信内下拉/双击缩放
+  document.addEventListener("touchmove", e=>{ if(e.target===document.body||e.target===canvas) e.preventDefault(); }, {passive:false});
+})();
+</script>
+</body>
+</html>
