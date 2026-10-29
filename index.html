@@ -178,11 +178,6 @@
   #voiceTime{ font-size:12px; color:#b8487f; margin-top:5px; letter-spacing:.5px; }
   #voiceErr{ font-size:13px; color:#b8487f; line-height:1.7; display:none; }
   #voiceErr.show{ display:block; }
-  #giftCard .real-gift{
-    margin-top:18px; padding:12px 14px; border-radius:12px; font-weight:700; font-size:15px;
-    background:linear-gradient(135deg,#ff8fb8,#ff6ba0); color:#fff;
-    box-shadow:0 8px 20px rgba(255,107,160,.45);
-  }
   #replay{
     margin-top:16px; border:none; cursor:pointer;
     padding:11px 26px; border-radius:999px; font-size:15px; font-weight:700; letter-spacing:1px;
@@ -232,7 +227,7 @@
   <canvas id="fx"></canvas>
 
   <div id="centerText">
-    <div class="big">小四<br>生日快乐 🎂</div>
+    <div class="big">琛雨<br>生日快乐 🎂</div>
     <div class="sub">考研上岸 · 岁岁平安 · 天天开心</div>
   </div>
 
@@ -247,13 +242,10 @@
     </div>
     <div id="giftHint">点一下拆开礼物 🎀</div>
     <div id="giftCard">
-      <h2>小四，生日快乐 🎂</h2>
-      <p>其实想说这句话很久了——这一年的你，真的很了不起。</p>
-      <p>我知道你有多少个早上是靠闹钟和意志力硬撑起来的，知道你嘴上说着“还行吧”其实心里也在打鼓，也知道你有过想把书合上再也不翻的瞬间。可你还是一天一天地坐到了现在。</p>
-      <p>所以我从来不担心结果。你这样的人，走到哪儿都不会差。我只希望你进考场的时候别慌，会的都写对，不会的也能蒙对；出考场的时候能长长舒一口气，说一句“我尽力了”。</p>
-      <p>上岸当然要上岸，但比上岸更重要的是——你要好好的。好好吃饭，好好睡觉，别把自己绷得太紧。</p>
-      <p>生日快乐，小四。愿你从此以后的路，都顺得让你自己都有点意外。</p>
-      <p class="sign">—— 一直在你这边的人</p>
+      <h2>琛雨，生日快乐 🎂</h2>
+      <p>生日快乐！</p>
+      <p>祝你考研顺利，成功上岸。✨</p>
+      <p>最近天气凉了，送你个帽子，别冷着了 🧣</p>
       <div id="voiceWrap">
         <div id="voiceHint">🎧 录了一段话给你，点开听</div>
         <div id="voiceBar">
@@ -263,16 +255,15 @@
             <div id="voiceTime">00:00</div>
           </div>
         </div>
-        <div id="voiceErr">语音需要在页面上单独上传后才能播放。<br>（把 voice.mp3 和 index.html 一起传到 GitHub 就行）</div>
+        <div id="voiceErr">语音暂时无法播放</div>
       </div>
-      <div class="real-gift">🎁 礼物是实物的，微信找我，我寄给你 / 约时间当面给你</div>
       <button id="replay">再看一遍 ✨</button>
     </div>
   </div>
 
   <div id="cover">
     <div class="cake">🎂</div>
-    <h1>小四，生日快乐</h1>
+    <h1>琛雨，生日快乐</h1>
     <p>戴上耳机 · 点下面的按钮开始 ✨</p>
     <button id="startBtn">开启惊喜</button>
   </div>
@@ -283,15 +274,15 @@
 <script>
 (function(){
   "use strict";
-  const NAME = "小四";
+  const NAME = "琛雨";
   const WISHES = [
-    "小四 生日快乐 🎂","小四 考研上岸 📚","小四 一研为定 ✨",
-    "小四 一定上岸 🏆","小四 金榜题名 🎊","小四 逢考必过 📝",
-    "小四 前程似锦 🌟","小四 岁岁平安 🕯️","小四 万事胜意 🍀",
-    "小四 天天开心 🌸","小四 平安喜乐 🎐","小四 未来可期 🌈",
-    "小四 生日快乐呀 🎉","小四 生日快乐 💗","小四 加油 ✊",
-    "小四 早点休息 🌙","小四 照顾好自己 ☕","小四 辛苦了 🧣",
-    "小四 上岸上岸 ⛰️","小四 生日快乐 💖"
+    "琛雨 生日快乐 🎂","琛雨 考研上岸 📚","琛雨 一研为定 ✨",
+    "琛雨 一定上岸 🏆","琛雨 金榜题名 🎊","琛雨 逢考必过 📝",
+    "琛雨 前程似锦 🌟","琛雨 岁岁平安 🕯️","琛雨 万事胜意 🍀",
+    "琛雨 天天开心 🌸","琛雨 平安喜乐 🎐","琛雨 未来可期 🌈",
+    "琛雨 生日快乐呀 🎉","琛雨 生日快乐 💗","琛雨 加油 ✊",
+    "琛雨 早点休息 🌙","琛雨 照顾好自己 ☕","琛雨 天冷加衣 🧣",
+    "琛雨 上岸上岸 ⛰️","琛雨 生日快乐 💖"
   ];
   const TEXT_COLORS = ["#ff9ecb","#ffd1e8","#ffc0e0","#ffffff","#ffb3d9","#ffe3f0","#ff8fb8","#ffd9a0"];
   const SPARKLES = ["✨","💖","🌸","🎀","⭐","🩷"];
@@ -528,7 +519,8 @@
   replay.addEventListener("click", ()=> location.reload());
 
   // ---- 语音条 ----
-  const VOICE_SRC = "voice.mp3";   // 把你的录音命名成 voice.mp3 放在同一文件夹
+  // 按顺序尝试这些文件名，哪个存在就用哪个（换格式不用改代码）
+  const VOICE_CANDIDATES = ["voice.m4a", "voice.mp3", "voice.m4a.m4a", "voice.wav", "voice.aac", "voice.ogg"];
   const voiceWrap = document.getElementById("voiceWrap");
   const voiceBtn  = document.getElementById("voiceBtn");
   const voiceWave = document.getElementById("voiceWave");
@@ -546,8 +538,19 @@
 
   const voice = new Audio();
   voice.preload = "auto";
-  voice.src = VOICE_SRC;
-  let voiceReady = false, voiceFailed = false, waveRAF = 0;
+  let voiceReady = false, voiceFailed = false, waveRAF = 0, voiceIdx = 0;
+
+  function tryVoiceSrc(i){
+    if(i >= VOICE_CANDIDATES.length){
+      voiceFailed = true;
+      voiceErr.classList.add("show");
+      voiceBtn.disabled = true;
+      return;
+    }
+    voiceIdx = i;
+    voice.src = VOICE_CANDIDATES[i];
+  }
+  tryVoiceSrc(0);
 
   const fmt = s => {
     if(!isFinite(s) || s < 0) s = 0;
@@ -558,7 +561,14 @@
   voice.addEventListener("loadedmetadata", ()=>{ voiceReady = true; voiceTime.textContent = "00:00 / " + fmt(voice.duration); });
   voice.addEventListener("canplay", ()=>{ voiceReady = true; });
   voice.addEventListener("error", ()=>{
-    if(!voiceReady){ voiceFailed = true; voiceErr.classList.add("show"); voiceBtn.disabled = true; }
+    // 当前文件不存在或格式不支持 -> 试下一个候选
+    if(!voiceReady && !voiceFailed && voiceIdx < VOICE_CANDIDATES.length - 1){
+      tryVoiceSrc(voiceIdx + 1);
+    } else if(!voiceReady && !voiceFailed){
+      voiceFailed = true;
+      voiceErr.classList.add("show");
+      voiceBtn.disabled = true;
+    }
   });
   voice.addEventListener("play", ()=>{
     voiceBtn.textContent = "❚❚"; voiceBtn.classList.add("playing"); voiceWave.classList.add("on");
